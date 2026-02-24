@@ -1,0 +1,12 @@
+services:
+  wordpress:
+    build:
+      context: ./wordpress
+      dockerfile: Dockerfile
+    image: yetiweb/yeti-fpm-wordpress:0.1
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: yetiweb/yeti-wp-nginx:0.1
