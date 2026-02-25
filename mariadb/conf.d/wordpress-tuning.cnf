@@ -1,0 +1,47 @@
+[mysqld]
+# --- Character set (required for WordPress emoji / full Unicode support) ---
+character-set-server  = utf8mb4
+collation-server      = utf8mb4_unicode_ci
+
+# --- InnoDB: most critical tuning area ---
+# Buffer pool: cache for data + indexes. Set to ~70% of RAM dedicated to DB.
+# 256M is a safe default for a small VPS; tune up as you scale.
+innodb_buffer_pool_size     = 4G
+innodb_buffer_pool_instances = 1          # increase to 2-8 if pool > 1G
+innodb_log_file_size        = 64M
+innodb_flush_log_at_trx_commit = 2        # flush once/sec vs every commit; ~10x faster writes, 1-sec durability tradeoff
+innodb_flush_method         = O_DIRECT    # bypass OS cache (avoid double-buffering)
+innodb_file_per_table       = 1           # each table gets its own .ibd file (easier reclaim of space)
+innodb_stats_on_metadata    = 0           # stop stats updates on every SHOW / INFORMATION_SCHEMA query
+
+# --- Connections ---
+max_connections     = 100                 # WordPress + WP-Cron + WP-CLI; raise if you see "too many connections"
+wait_timeout        = 300
+interactive_timeout = 300
+connect_timeout     = 10
+
+# --- Query cache (disabled; harmful at high concurrency, removed in MySQL 8) ---
+# MariaDB still has it but OFF is recommended for WordPress
+query_cache_type = 0
+query_cache_size = 0
+
+# --- Temp tables ---
+tmp_table_size    = 32M
+max_heap_table_size = 32M
+
+# --- Slow query log (surface unindexed / expensive queries) ---
+slow_query_log         = 1
+slow_query_log_file    = /var/log/mysql/slow.log
+long_query_time        = 5
+log_queries_not_using_indexes = 1
+min_examined_row_limit = 100              # ignore trivially small table scans
+
+# --- General ---
+max_allowed_packet  = 128M               # match nginx/PHP upload limits
+lower_case_table_names = 1               # avoid case-sensitivity surprises across OS
+
+[client]
+default-character-set = utf8mb4
+
+[mysql]
+default-character-set = utf8mb4

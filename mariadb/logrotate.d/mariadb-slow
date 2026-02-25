@@ -1,0 +1,10 @@
+/var/log/mysql/slow.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate     # truncate-in-place; no need to signal MariaDB for reload
+    maxsize 100M     # also rotate if the file hits 100M before the daily trigger
+}

@@ -3,7 +3,7 @@ FROM wordpress:6.7.2-php8.3-fpm
 
 # --- System packages (changes least often → best cache layer) ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    unzip \
+    unzip less\
     default-mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
@@ -29,4 +29,5 @@ RUN curl -fsSL "https://github.com/wp-cli/wp-cli/releases/download/v$WP_CLI_VERS
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     CMD pgrep php-fpm || exit 1
 
+USER www-data
 # the base image already runs as www-data via FPM

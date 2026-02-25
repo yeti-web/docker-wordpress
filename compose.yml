@@ -10,3 +10,9 @@ services:
       context: ./nginx
       dockerfile: Dockerfile
     image: yetiweb/yeti-wp-nginx:0.1
+
+  mariadb:
+    build:
+      context: ./mariadb
+      dockerfile: Dockerfile
+    image: yetiweb/yeti-wp-mariadb:0.1
